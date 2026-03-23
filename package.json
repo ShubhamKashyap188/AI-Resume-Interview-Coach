@@ -1,0 +1,39 @@
+{
+  "name": "ai-resume-interview-coach",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node --watch index.js",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:ui": "npm run dev:frontend",
+    "dev:all": "concurrently \"npm run start\" \"npm run dev:frontend\"",
+    "build:frontend": "npm --prefix frontend run build",
+    "build:ui": "npm run build:frontend",
+    "start:frontend": "npm --prefix frontend run start",
+    "start:ui": "npm run start:frontend",
+    "start": "node index.js",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "screenshots": "node scripts/capture-screenshots.mjs"
+  },
+  "dependencies": {
+    "axios": "^1.13.6",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mammoth": "^1.12.0",
+    "multer": "^2.1.1",
+    "pdf-parse": "^2.4.5"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.1",
+    "concurrently": "^9.2.1",
+    "playwright": "^1.58.2",
+    "supertest": "^7.2.2",
+    "vitest": "^4.1.1"
+  }
+}
