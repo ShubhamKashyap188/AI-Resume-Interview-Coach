@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import multer from "multer";
 import axios from "axios";
 import cors from "cors";
-import PDFParse from "pdf-parse";
+import PDFParse from "pdf-parse/lib/pdf-parse.js";
 import mammoth from "mammoth";
 
 // Disable canvas for serverless/Vercel compatibility
