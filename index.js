@@ -3,14 +3,33 @@ process.env.PDFJS_DISABLE_CANVAS = "true";
 process.env.PDF_USE_NATIVE_MODULE = "false";
 process.env.PDF_USE_WORKER = "false";
 
-// Suppress specific warnings from pdfjs-dist
+// Suppress ALL warnings/errors that contain canvas, polyfill, or worker references
 const originalWarn = console.warn;
+const originalError = console.error;
+const originalLog = console.log;
+
+const isIgnorableMessage = (message) => {
+  const msg = String(message || "");
+  return msg.includes("Cannot load") || msg.includes("Cannot polyfill") || 
+         msg.includes("Worker") || msg.includes("canvas") || 
+         msg.includes("DOMMatrix") || msg.includes("ImageData") ||
+         msg.includes("NAPI") || msg.includes("napi-rs");
+};
+
 console.warn = function(...args) {
-  // Filter out canvas-related warnings from pdfjs-dist
-  if (args[0]?.includes?.("Cannot load") || args[0]?.includes?.("Cannot polyfill")) {
-    return;
-  }
+  if (isIgnorableMessage(args[0])) return;
   originalWarn.apply(console, args);
+};
+
+console.error = function(...args) {
+  if (isIgnorableMessage(args[0])) return;
+  originalError.apply(console, args);
+};
+
+// Also suppress from logs to catch any other canvas-related output
+console.log = function(...args) {
+  if (isIgnorableMessage(args[0])) return;
+  originalLog.apply(console, args);
 };
 
 import express from "express";
