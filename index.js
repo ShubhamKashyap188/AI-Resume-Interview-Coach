@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import multer from "multer";
 import axios from "axios";
 import cors from "cors";
-import PDFParse from "pdf-parse/lib/pdf-parse.js";
+import { PDFParse } from "pdf-parse";
 import mammoth from "mammoth";
 
 // Disable canvas for serverless/Vercel compatibility
@@ -63,8 +63,10 @@ async function extractResumeText(file) {
 
   if (ext === "pdf") {
     try {
-      const parsed = await PDFParse(file.buffer);
-      return parsed.text || "";
+      const parser = new PDFParse({ data: file.buffer });
+      const result = await parser.getText();
+      await parser.destroy();
+      return result.text || "";
     } catch (err) {
       throw badRequest("Failed to extract text from PDF. Please ensure the file is readable.");
     }
