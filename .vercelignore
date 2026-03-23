@@ -1,0 +1,15 @@
+uploads/
+coverage/
+docs/
+scripts/
+tests/
+.git/
+.gitignore
+.env.*.local
+.env.local
+.eslintignore
+.eslintrc.json
+README.md
+AGENTS.md
+DEPLOYMENT.md
+VERCEL_FIX.md

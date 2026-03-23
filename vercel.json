@@ -24,6 +24,8 @@
     }
   ],
   "env": {
-    "PDFJS_DISABLE_CANVAS": "true"
+    "PDFJS_DISABLE_CANVAS": "true",
+    "PDF_USE_NATIVE_MODULE": "false",
+    "PDF_USE_WORKER": "false"
   }
 }

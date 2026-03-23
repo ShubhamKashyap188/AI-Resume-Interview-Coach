@@ -1,3 +1,18 @@
+// Disable canvas and suppress warnings BEFORE any imports
+process.env.PDFJS_DISABLE_CANVAS = "true";
+process.env.PDF_USE_NATIVE_MODULE = "false";
+process.env.PDF_USE_WORKER = "false";
+
+// Suppress specific warnings from pdfjs-dist
+const originalWarn = console.warn;
+console.warn = function(...args) {
+  // Filter out canvas-related warnings from pdfjs-dist
+  if (args[0]?.includes?.("Cannot load") || args[0]?.includes?.("Cannot polyfill")) {
+    return;
+  }
+  originalWarn.apply(console, args);
+};
+
 import express from "express";
 import dotenv from "dotenv";
 import multer from "multer";
@@ -5,9 +20,6 @@ import axios from "axios";
 import cors from "cors";
 import { PDFParse } from "pdf-parse";
 import mammoth from "mammoth";
-
-// Disable canvas for serverless/Vercel compatibility
-process.env.PDFJS_DISABLE_CANVAS = "true";
 
 dotenv.config();
 
