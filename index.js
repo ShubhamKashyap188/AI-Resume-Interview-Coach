@@ -3,8 +3,11 @@ import dotenv from "dotenv";
 import multer from "multer";
 import axios from "axios";
 import cors from "cors";
-import { PDFParse } from "pdf-parse";
+import PDFParse from "pdf-parse";
 import mammoth from "mammoth";
+
+// Disable canvas for serverless/Vercel compatibility
+process.env.PDFJS_DISABLE_CANVAS = "true";
 
 dotenv.config();
 
@@ -59,10 +62,12 @@ async function extractResumeText(file) {
   }
 
   if (ext === "pdf") {
-    const parser = new PDFParse({ data: file.buffer });
-    const parsed = await parser.getText();
-    await parser.destroy();
-    return parsed?.text || "";
+    try {
+      const parsed = await PDFParse(file.buffer);
+      return parsed.text || "";
+    } catch (err) {
+      throw badRequest("Failed to extract text from PDF. Please ensure the file is readable.");
+    }
   }
 
   if (ext === "docx") {
