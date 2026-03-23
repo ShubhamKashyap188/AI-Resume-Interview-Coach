@@ -2,7 +2,15 @@
 
 import { FormEvent, useMemo, useState } from "react";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+// Production-safe API URL: requires explicit env var, no localhost fallback
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "";
+
+if (!API_BASE && typeof window !== "undefined" && process.env.NODE_ENV === "production") {
+  console.error("ERROR: NEXT_PUBLIC_API_URL is not set. Backend API calls will fail.");
+}
+
+// Allow localhost only in development
+const API_URL = API_BASE || (typeof window !== "undefined" && process.env.NODE_ENV === "development" ? "http://localhost:4000" : "");
 
 type NullableFile = File | null;
 
@@ -47,7 +55,7 @@ export default function Home() {
       const formData = new FormData();
       formData.append("resume", resumeFile);
 
-      const response = await fetch(`${API_BASE}/upload`, {
+      const response = await fetch(`${API_URL}/upload`, {
         method: "POST",
         body: formData,
       });
@@ -72,7 +80,7 @@ export default function Home() {
     setAnalyzeLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE}/analyze`, {
+      const response = await fetch(`${API_URL}/analyze`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -101,7 +109,7 @@ export default function Home() {
     setQuestionLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE}/questions`, {
+      const response = await fetch(`${API_URL}/questions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -130,7 +138,7 @@ export default function Home() {
     setMockLoading(true);
 
     try {
-      const response = await fetch(`${API_BASE}/mock`, {
+      const response = await fetch(`${API_URL}/mock`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
